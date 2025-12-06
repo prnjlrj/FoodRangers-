@@ -3,9 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receiver</title>
+    <title>Receiver Section</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-    
+
+    <div class="container mt-4">
+        <div class="card p-4 shadow-lg rounded receiver-card">
+
+            <h2 class="fw-bold mb-4 text-center">Receiver Details</h2>
+
+            <!-- TO (DROPDOWN) -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">To</label>
+                <select class="form-select form-select-lg">
+                    <option value="">Select Location</option>
+                    <option>Bijnor, Uttar Pradesh</option>
+                    <option>Thane, Mumbai</option>
+                    <option>UB City, Bangalore</option>
+                </select>
+            </div>
+
+            <!-- VEG PRICE + QUANTITY -->
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <strong>Veg — ₹30 per plate</strong>
+                <div class="quantity-box d-flex align-items-center">
+                    <button class="btn btn-sm btn-dark" id="vegMinus">−</button>
+                    <input type="text" id="vegQty" class="form-control text-center mx-2" value="0" style="width: 65px;">
+                    <button class="btn btn-sm btn-dark" id="vegPlus">+</button>
+                </div>
+            </div>
+
+            <!-- NON-VEG PRICE + QUANTITY -->
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <strong>Non-Veg — ₹30 per plate</strong>
+                <div class="quantity-box d-flex align-items-center">
+                    <button class="btn btn-sm btn-dark" id="nonvegMinus">−</button>
+                    <input type="text" id="nonvegQty" class="form-control text-center mx-2" value="0" style="width: 65px;">
+                    <button class="btn btn-sm btn-dark" id="nonvegPlus">+</button>
+                </div>
+            </div>
+
+            <!-- JAIN PRICE + QUANTITY -->
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <strong>Jain — ₹30 per plate</strong>
+                <div class="quantity-box d-flex align-items-center">
+                    <button class="btn btn-sm btn-dark" id="jainMinus">−</button>
+                    <input type="text" id="jainQty" class="form-control text-center mx-2" value="0" style="width: 65px;">
+                    <button class="btn btn-sm btn-dark" id="jainPlus">+</button>
+                </div>
+            </div>
+
+            <!-- FINAL PRICE -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Final Price (₹)</label>
+                <input type="text" id="finalPrice" class="form-control form-control-lg" value="0" readonly>
+            </div>
+
+            <!-- PROCEED BUTTON -->
+            <div class="text-center mt-4">
+                <button class="btn btn-lg pay-btn px-5">
+                    Proceed to Pay
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+// Price per plate
+const PRICES = { veg: 25, nonveg: 30, jain: 28 };
+
+// Quantity inputs
+const vegQty = document.getElementById("vegQty");
+const nonvegQty = document.getElementById("nonvegQty");
+const jainQty = document.getElementById("jainQty");
+
+// Final price
+const finalPrice = document.getElementById("finalPrice");
+
+// Update final price
+function updatePrice() {
+    let total =
+        (parseInt(vegQty.value) * PRICES.veg) +
+        (parseInt(nonvegQty.value) * PRICES.nonveg) +
+        (parseInt(jainQty.value) * PRICES.jain);
+
+    finalPrice.value = total;
+}
+
+// Quantity button controls
+function setupButtons(minusId, plusId, inputField) {
+    document.getElementById(minusId).onclick = () => {
+        let v = parseInt(inputField.value);
+        if (v > 0) inputField.value = v - 1;
+        updatePrice();
+    };
+    document.getElementById(plusId).onclick = () => {
+        let v = parseInt(inputField.value);
+        inputField.value = v + 1;
+        updatePrice();
+    };
+}
+
+setupButtons("vegMinus", "vegPlus", vegQty);
+setupButtons("nonvegMinus", "nonvegPlus", nonvegQty);
+setupButtons("jainMinus", "jainPlus", jainQty);
+</script>
+
 </body>
 </html>

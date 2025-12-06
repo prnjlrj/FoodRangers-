@@ -109,3 +109,49 @@ body
 .container {
     max-width: 650px;
 }
+
+
+/* RECEIVER SECTION */
+
+body {
+    background: rgba(255, 106, 0, 0.15);
+    font-family: 'Inter', sans-serif;
+}
+
+.receiver-card {
+    background: #ffffff;
+    border-left: 6px solid #ff6a00;
+}
+
+/* Pay button */
+.pay-btn {
+    background: #ff6a00;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pay-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 12px rgba(255, 106, 0, 0.6);
+}
+
+/* Quantity input style */
+.quantity-box input {
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Input glow focus */
+.form-control:focus, .form-select:focus {
+    border-color: #ff6a00 !important;
+    box-shadow: 0px 0px 8px rgba(255, 106, 0, 0.4) !important;
+}
+
+/* Container max width */
+.container {
+    max-width: 650px;
+}
