@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const messageDiv = document.getElementById('message');
 
-    // Check auth on protected pages
-    if (window.location.pathname.includes('dashboard') || window.location.pathname.includes('food-hub')) {
+    // Protect dashboard/food-hub pages
+    if (window.location.pathname.includes('dashboard.html') || window.location.pathname.includes('food-hub.html')) {
         const user = JSON.parse(localStorage.getItem('userInfo'));
         if (!user || !user.uniqueWording) {
             window.location.href = '/';
@@ -49,10 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('✅ User stored:', result.user);
                     }
                     
-                    //const redirect = result.user?.account_type === 'organisation' ? '/food-hub.html' : '/dashboard.html';
-                    const redirect = '/food-hub.html';
                     setTimeout(() => {
-                        window.location.href = redirect;
+                        window.location.href = '/dashboard.html';
                     }, 1500);
                 } else {
                     if (messageDiv) {
@@ -84,4 +82,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    // Global profile setup function (for food-hub)
+    window.setupProfile = async function(phone, addresses) {
+        const user = JSON.parse(localStorage.getItem('userInfo'));
+        const res = await fetch('/api/profile/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user.id, phone, addresses })
+        });
+        return res.json();
+    };
 });

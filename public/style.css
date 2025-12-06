@@ -6,137 +6,242 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1b14 50%, #000000 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #ffffff;
 }
 
 .container {
     width: 100%;
-    max-width: 450px; /* Slightly wider for fieldset */
+    max-width: 450px;
     padding: 20px;
 }
 
 .form-box {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 106, 0, 0.3);
     padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
 }
 
 h2 {
     text-align: center;
     margin-bottom: 30px;
-    color: #333;
+    background: linear-gradient(135deg, #ff6a00, #ff8c42);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 28px;
+    font-weight: 700;
 }
 
 /* Account Type Fieldset Styling */
 fieldset {
-    border: 2px solid #e1e5e9;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    background: rgba(102, 126, 234, 0.03);
+    border: 2px solid rgba(255, 106, 0, 0.4);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    background: rgba(255, 106, 0, 0.08);
+    box-shadow: inset 0 2px 10px rgba(255, 106, 0, 0.1);
 }
 
 legend {
-    font-weight: 600;
-    color: #333;
-    padding: 0 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6a00, #ff8c42);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    padding: 0 15px;
     font-size: 16px;
 }
 
 fieldset label {
-    display: block;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.95);
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+fieldset label:hover {
+    background: rgba(255, 106, 0, 0.1);
 }
 
 fieldset input[type="radio"] {
     width: auto;
     margin: 0;
-    margin-right: 8px;
-    transform: scale(1.1);
-    accent-color: #667eea;
+    transform: scale(1.2);
+    accent-color: #ff6a00;
+    filter: drop-shadow(0 0 3px rgba(255, 106, 0, 0.5));
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
     width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 2px solid #e1e5e9;
-    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 106, 0, 0.3);
+    border-radius: 15px;
     font-size: 16px;
+    color: #ffffff;
     transition: all 0.3s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff6a00;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.2), 0 0 20px rgba(255, 106, 0, 0.3);
 }
 
 button {
     width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    padding: 18px;
+    background: linear-gradient(135deg, #ff6a00 0%, #ff8c42 100%);
+    color: #000000;
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 106, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(255, 106, 0, 0.5);
+}
+
+button:active {
+    transform: translateY(-1px);
 }
 
 p {
     text-align: center;
-    margin-top: 20px;
-    color: #666;
+    margin-top: 25px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 a {
-    color: #667eea;
+    color: #ff6a00;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    transition: all 0.3s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #ff8c42;
+    text-shadow: 0 0 10px rgba(255, 106, 0, 0.5);
 }
 
 #message {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
     text-align: center;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 15px;
+    backdrop-filter: blur(10px);
 }
 
 .success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: rgba(40, 167, 69, 0.2);
+    color: #d4edda;
+    border: 1px solid rgba(40, 167, 69, 0.5);
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
 }
 
 .error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: rgba(220, 53, 69, 0.2);
+    color: #f8d7da;
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Profile Bar - Black & Orange */
+.profile-bar {
+    width: 100%;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 30px rgba(255, 106, 0, 0.3);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.options {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    padding: 0 30px;
+}
+
+.options i {
+    margin-left: auto;
+    color: #ff6a00;
+    font-size: 20px;
+}
+
+.profile-bar a {
+    text-decoration: none;
+    color: #ff6a00;
+    font-weight: 700;
+    padding: 15px 25px;
+    border: 2px solid #ff6a00;
+    border-radius: 25px;
+    margin-left: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-bar a:hover {
+    background: #ff6a00;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 106, 0, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-box {
+        margin: 20px;
+        padding: 30px 25px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .profile-bar {
+        padding: 0 15px;
+    }
+    
+    .options {
+        padding: 0 15px;
+    }
 }

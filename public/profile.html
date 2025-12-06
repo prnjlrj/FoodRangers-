@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .custom-header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            position: relative;
+        }
+        .logout-btn {
+            background: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: white !important;
+            font-weight: 500;
+        }
+        .logout-btn:hover {
+            background: #c82333 !important;
+            border-color: #bd2130 !important;
+            transform: translateY(-1px);
+        }
+        .edit-mode .readonly { background: white !important; border-color: #667eea !important; }
+        .address-item { background: #f8f9fa; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        .btn-orange { background: #ff6a00; border-color: #ff6a00; }
+        .btn-orange:hover { background: #e55a00; }
+        .saving { opacity: 0.6; }
+        .saved { background: #d4edda !important; border-color: #28a745 !important; }
+        .address-save-btn { background: #28a745 !important; border-color: #28a745 !important; min-width: 70px; }
+        .address-save-btn:hover:not(:disabled) { background: #218838 !important; }
+        .address-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+
+<body>
+    <!-- Header with Logout Button -->
+    <header class="custom-header d-flex align-items-center px-3 py-2">
+        <i class="fas fa-user-circle fa-2x text-white me-3"></i>
+        <h1 class="m-0 fw-bold text-white flex-grow-1">User Profile</h1>
+        <button class="btn btn-sm logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+        </button>
+    </header>
+
+    <div class="container mt-4">
+        <div class="card p-4 shadow-lg rounded">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4><i class="fas fa-user me-2"></i>Profile Details</h4>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" id="toggleEdit">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </button>
+                    <button class="btn btn-sm btn-success d-none" id="saveAllBtn" onclick="saveAllProfile()">
+                        <i class="fas fa-save me-1"></i>Save All
+                    </button>
+                    <button class="btn btn-sm btn-secondary d-none" id="cancelBtn" onclick="cancelEdit()">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Name, Email (unchanged) -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Name</label>
+                <input type="text" class="form-control form-control-lg readonly" id="name" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control form-control-lg readonly" id="email" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Phone Number</label>
+                <input type="tel" class="form-control form-control-lg readonly" id="phone" readonly>
+            </div>
+
+            <!-- ADDRESSES - WITH SAVE BUTTONS -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Addresses</label>
+                <div id="addressesContainer"></div>
+                <button class="btn btn-orange btn-sm mt-2" onclick="addAddress()">
+                    <i class="fas fa-plus me-1"></i>Add Address
+                </button>
+            </div>
+
+            <div id="message" class="mt-3"></div>
+        </div>
+    </div>
+
+    <script>
+        let addresses = [];
+        let originalData = {};
+        let isEditing = false;
+
+        function capitalizeWords(str) {
+            return str ? str.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ') : '';
+        }
+
+        // ✅ LOGOUT FUNCTION
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userInfo');
+                window.location.href = '/';
+            }
+        }
+
+        // ✅ SAVE ALL ADDRESSES TO DB
+        async function saveAllAddressesToDB() {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            
+            try {
+                const updatedData = {
+                    userId: userInfo.id,
+                    phone: document.getElementById('phone').value,
+                    addresses: addresses.filter(addr => addr.trim())
+                };
+
+                const res = await fetch('/api/profile/setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (res.ok) {
+                    // Update localStorage
+                    localStorage.setItem('userInfo', JSON.stringify({
+                        ...userInfo,
+                        phone: updatedData.phone,
+                        addresses: updatedData.addresses
+                    }));
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Save error:', error);
+                return false;
+            }
+        }
+
+        async function loadProfile() {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo) {
+                window.location.href = '/';
+                return;
+            }
+
+            document.getElementById('name').value = capitalizeWords(userInfo.username);
+            document.getElementById('email').value = userInfo.email;
+
+            try {
+                const res = await fetch(`/api/profile/${userInfo.id}`);
+                const data = await res.json();
+                const profile = data.profile || {};
+
+                document.getElementById('phone').value = profile.phone || '';
+                addresses = profile.addresses || [];
+                originalData = { ...userInfo, phone: profile.phone, addresses };
+
+                renderAddresses();
+            } catch (error) {
+                console.error('Profile load error:', error);
+                addresses = [];
+                renderAddresses();
+            }
+        }
+
+        function renderAddresses() {
+            const container = document.getElementById('addressesContainer');
+            container.innerHTML = '';
+
+            addresses.forEach((address, index) => {
+                const addressDiv = document.createElement('div');
+                addressDiv.className = 'address-item d-flex align-items-start justify-content-between mb-2';
+                addressDiv.innerHTML = `
+                    <div class="flex-grow-1 me-2">
+                        <input type="text" class="form-control readonly" value="${address || ''}" data-index="${index}" readonly placeholder="Enter address...">
+                    </div>
+                    <div class="btn-group mt-1" role="group">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editAddress(${index})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger me-1" onclick="removeAddress(${index})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-sm address-save-btn d-none" onclick="saveSingleAddress(${index})" id="saveBtn-${index}">
+                            <i class="fas fa-save me-1"></i>Save
+                        </button>
+                    </div>
+                `;
+                container.appendChild(addressDiv);
+            });
+        }
+
+        function addAddress() {
+            addresses.push('');
+            renderAddresses();
+        }
+
+        // ✅ EDIT ADDRESS - Shows Save Button
+        function editAddress(index) {
+            const addressItem = document.querySelectorAll('.address-item')[index];
+            const input = addressItem.querySelector('input');
+            const saveBtn = document.getElementById(`saveBtn-${index}`);
+            
+            input.removeAttribute('readonly');
+            input.focus();
+            saveBtn.classList.remove('d-none');
+            
+            // Save on Enter
+            input.addEventListener('keypress', async function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    await saveSingleAddress(index);
+                }
+            }, { once: true });
+        }
+
+        // ✅ SAVE SINGLE ADDRESS TO DB
+        async function saveSingleAddress(index) {
+            const addressItem = document.querySelectorAll('.address-item')[index];
+            const input = addressItem.querySelector('input');
+            const saveBtn = document.getElementById(`saveBtn-${index}`);
+            
+            const newAddress = input.value.trim();
+            addresses[index] = newAddress;
+            
+            // Show saving state
+            addressItem.classList.add('saving');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+            
+            const success = await saveAllAddressesToDB();
+            
+            if (success) {
+                addressItem.classList.remove('saving');
+                addressItem.classList.add('saved');
+                input.setAttribute('readonly', true);
+                saveBtn.classList.add('d-none');
+                setTimeout(() => addressItem.classList.remove('saved'), 2000);
+            } else {
+                addressItem.classList.remove('saving');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-1"></i>Save';
+            }
+        }
+
+        function removeAddress(index) {
+            if (confirm('Delete this address?')) {
+                addresses.splice(index, 1);
+                renderAddresses();
+                saveAllAddressesToDB();  // Update DB
+            }
+        }
+
+        // Edit/Save/Cancel (unchanged from previous)
+        document.getElementById('toggleEdit').addEventListener('click', function() {
+            isEditing = true;
+            document.body.classList.add('edit-mode');
+            document.getElementById('toggleEdit').classList.add('d-none');
+            document.getElementById('saveAllBtn').classList.remove('d-none');
+            document.getElementById('cancelBtn').classList.remove('d-none');
+            document.querySelectorAll('.readonly').forEach(input => input.removeAttribute('readonly'));
+        });
+
+        async function saveAllProfile() {
+            const success = await saveAllAddressesToDB();
+            if (success) {
+                showMessage('Profile saved successfully!', 'success');
+                setTimeout(cancelEdit, 1500);
+            } else {
+                showMessage('Save failed. Please try again.', 'danger');
+            }
+        }
+
+        function cancelEdit() {
+            isEditing = false;
+            document.body.classList.remove('edit-mode');
+            document.getElementById('toggleEdit').classList.remove('d-none');
+            document.getElementById('saveAllBtn').classList.add('d-none');
+            document.getElementById('cancelBtn').classList.add('d-none');
+            loadProfile(); // Reload from server
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="alert alert-${type === 'success' ? 'success' : 'danger'}">${text}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

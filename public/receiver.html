@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver Section</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-orange: #ff6a00;
+            --dark-bg: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 106, 0, 0.3);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2d1b14 50%, var(--dark-bg) 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .receiver-container {
+            min-height: 100vh;
+            padding: 80px 20px 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .receiver-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 550px;
+            margin: 0 auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receiver-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-orange), #ff8c42, var(--primary-orange));
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 10;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 106, 0, 0.2);
+            border-color: var(--primary-orange);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 106, 0, 0.3);
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, var(--primary-orange), #ff8c42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            color: #ffffff;
+            padding: 15px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.2);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .quantity-group {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: var(--primary-orange);
+            border: none;
+            color: #000;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.4);
+        }
+
+        .price-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .pay-btn {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ff8c42 100%);
+            color: #000;
+            border: none;
+            font-weight: 800;
+            padding: 20px 50px;
+            border-radius: 25px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 40px rgba(255, 106, 0, 0.4);
+            width: 100%;
+        }
+
+        .pay-btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(255, 106, 0, 0.5);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .address-hint {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .no-address {
+            background: rgba(220, 53, 69, 0.2) !important;
+            border: 2px dashed rgba(220, 53, 69, 0.5) !important;
+            color: #f8d7da !important;
+        }
+
+        .form-select {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: 2px solid var(--glass-border) !important;
+            border-radius: 15px !important;
+            color: #ffffff !important;
+            padding: 15px 50px 15px 20px !important;
+            font-size: 16px !important;
+            backdrop-filter: blur(10px) !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ff6a00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+            background-position: right 15px center !important;
+            background-repeat: no-repeat !important;
+            background-size: 18px !important;
+        }
+        /* Add this to your existing <style> in receiver.html */
+
+.form-select {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 2px solid var(--glass-border) !important;
+    border-radius: 15px !important;
+    color: #ffffff !important;
+    padding: 15px 50px 15px 20px !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ff6a00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-position: right 15px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 18px !important;
+}
+
+.form-select:focus {
+    border-color: var(--primary-orange) !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.2), 0 0 20px rgba(255, 106, 0, 0.3) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    outline: none !important;
+}
+
+/* Dropdown options - Dark theme */
+.form-select option {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    padding: 12px !important;
+}
+
+.form-select option:hover,
+.form-select option:focus,
+.form-select option:checked {
+    background: var(--primary-orange) !important;
+    color: #000 !important;
+}
+
+/* No address styling */
+.no-address {
+    background: rgba(220, 53, 69, 0.2) !important;
+    border: 2px dashed rgba(220, 53, 69, 0.5) !important;
+    color: #f8d7da !important;
+}
+
+        @media (max-width: 768px) {
+            .receiver-container { padding: 60px 15px 30px; }
+            .receiver-card { padding: 30px 25px; margin: 0 10px; }
+            .section-title { font-size: 1.6rem; }
+            .back-btn { top: 15px; left: 15px; padding: 8px 12px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receiver-container">
+        <div class="card receiver-card">
+            <!-- Back Button -->
+            <a href="dashboard.html" class="back-btn" title="Go back to Dashboard">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+
+            <h2 class="section-title mb-4">
+                <i class="fas fa-shopping-cart me-3"></i>
+                Order Food
+            </h2>
+
+            <!-- Location -->
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fas fa-map-marker-alt me-2 text-warning"></i>
+                    Delivery Location
+                </label>
+                <select class="form-select form-select-lg" id="locationSelect">
+                    <option value="">Loading addresses...</option>
+                </select>
+                <small class="address-hint mt-2">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Select from your saved addresses
+                </small>
+            </div>
+
+            <!-- Veg -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="price-label">
+                        <i class="fas fa-leaf text-success me-2"></i>
+                        Veg — ₹25/plate
+                    </div>
+                    <div class="quantity-group">
+                        <button class="quantity-btn" id="vegMinus">−</button>
+                        <input type="text" id="vegQty" class="form-control text-center px-3" 
+                            value="0" readonly style="border: none; background: transparent; font-size: 18px; font-weight: 700;">
+                        <button class="quantity-btn" id="vegPlus">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Non-Veg -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="price-label">
+                        <i class="fas fa-drumstick-bite text-danger me-2"></i>
+                        Non-Veg — ₹30/plate
+                    </div>
+                    <div class="quantity-group">
+                        <button class="quantity-btn" id="nonvegMinus">−</button>
+                        <input type="text" id="nonvegQty" class="form-control text-center px-3" 
+                            value="0" readonly style="border: none; background: transparent; font-size: 18px; font-weight: 700;">
+                        <button class="quantity-btn" id="nonvegPlus">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jain -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="price-label">
+                        <i class="fas fa-seedling text-warning me-2"></i>
+                        Jain — ₹28/plate
+                    </div>
+                    <div class="quantity-group">
+                        <button class="quantity-btn" id="jainMinus">−</button>
+                        <input type="text" id="jainQty" class="form-control text-center px-3" 
+                            value="0" readonly style="border: none; background: transparent; font-size: 18px; font-weight: 700;">
+                        <button class="quantity-btn" id="jainPlus">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Price -->
+            <div class="mb-5">
+                <label class="form-label">
+                    <i class="fas fa-rupee-sign text-success me-2"></i>
+                    Total Amount
+                </label>
+                <input type="text" id="finalPrice" class="form-control form-control-lg" value="₹0" readonly>
+            </div>
+
+            <!-- Pay Button -->
+            <div class="text-center">
+                <button class="pay-btn" id="proceedBtn">
+                    <i class="fas fa-credit-card me-2"></i>
+                    Proceed to Pay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Price per plate
+        const PRICES = { veg: 25, nonveg: 30, jain: 28 };
+
+        // Elements
+        const vegQty = document.getElementById("vegQty");
+        const nonvegQty = document.getElementById("nonvegQty");
+        const jainQty = document.getElementById("jainQty");
+        const finalPrice = document.getElementById("finalPrice");
+        const locationSelect = document.getElementById("locationSelect");
+        const addressHint = document.querySelector('.address-hint');
+        const proceedBtn = document.getElementById("proceedBtn");
+
+        // Load user addresses
+        function loadUserAddresses() {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            
+            if (!userInfo || !userInfo.addresses || userInfo.addresses.length === 0) {
+                locationSelect.innerHTML = '<option value="" class="no-address">➕ Add address in Profile first</option>';
+                locationSelect.classList.add('no-address');
+                addressHint.innerHTML = '<i class="fas fa-exclamation-triangle me-1 text-warning"></i>Add addresses in Profile first';
+                proceedBtn.disabled = true;
+                proceedBtn.innerHTML = '<i class="fas fa-user me-2"></i>Add Profile First';
+                return;
+            }
+
+            locationSelect.innerHTML = '<option value="">Select delivery location</option>';
+            userInfo.addresses.forEach((address) => {
+                if (address.trim()) {
+                    const option = document.createElement('option');
+                    option.value = address;
+                    option.textContent = address.length > 50 ? address.substring(0, 50) + '...' : address;
+                    locationSelect.appendChild(option);
+                }
+            });
+
+            locationSelect.classList.remove('no-address');
+            addressHint.innerHTML = `<i class="fas fa-check-circle me-1 text-success"></i>${userInfo.addresses.length} address(es) loaded`;
+            proceedBtn.disabled = false;
+            proceedBtn.innerHTML = '<i class="fas fa-credit-card me-2"></i>Proceed to Pay';
+        }
+
+        // Update price
+        function updatePrice() {
+            let total = (parseInt(vegQty.value || 0) * PRICES.veg) +
+                       (parseInt(nonvegQty.value || 0) * PRICES.nonveg) +
+                       (parseInt(jainQty.value || 0) * PRICES.jain);
+            finalPrice.value = total === 0 ? '₹0' : `₹${total}`;
+        }
+
+        // Quantity controls
+        function setupButtons(minusId, plusId, inputField) {
+            document.getElementById(minusId).onclick = () => {
+                let v = parseInt(inputField.value || 0);
+                if (v > 0) inputField.value = v - 1;
+                updatePrice();
+            };
+            document.getElementById(plusId).onclick = () => {
+                let v = parseInt(inputField.value || 0);
+                inputField.value = v + 1;
+                updatePrice();
+            };
+        }
+
+        setupButtons("vegMinus", "vegPlus", vegQty);
+        setupButtons("nonvegMinus", "nonvegPlus", nonvegQty);
+        setupButtons("jainMinus", "jainPlus", jainQty);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserAddresses();
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo) window.location.href = '/';
+        });
+
+        if (!localStorage.getItem('userInfo')) window.location.href = '/';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
