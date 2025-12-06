@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        .form-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 1);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-section {
+            margin-bottom: 25px;
+        }
+
+        .user-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 16px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row strong {
+            color: #555;
+        }
+
+        .uuid-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0fe 100%);
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .uuid-help {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .back-link {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            color: #667eea;
+        }
+
+        #message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .form-box {
+                padding: 30px 20px;
+            }
+            .uuid-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <h2>Dashboard</h2>
+            
+            <div id="userInfo" class="user-card" style="display: none;">
+                <div class="user-section">
+                    <h3>👤 User Profile</h3>
+                    <div class="info-row">
+                        <strong>Username:</strong> 
+                        <span id="username">-</span>
+                    </div>
+                    <div class="info-row">
+                        <strong>Email:</strong> 
+                        <span id="email">-</span>
+                    </div>
+                    <div class="info-row">
+                        <strong>Account Type:</strong> 
+                        <span id="accountType">-</span>
+                    </div>
+                    <div class="info-row">
+                        <strong>User ID:</strong> 
+                        <span id="userId">-</span>
+                    </div>
+                </div>
+                
+                <div class="user-section">
+                    <h3>🔑 Unique ID (UUID)</h3>
+                    <div class="uuid-container">
+                        <span id="uniqueWording">-</span>
+                        <button id="copyBtn" class="copy-btn">📋 Copy</button>
+                    </div>
+                    <p class="uuid-help">Use this ID for sharing, APIs, or custom links!</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+                <a href="/" class="back-link">← Back to Login</a>
+            </div>
+
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const messageDiv = document.getElementById('message');
+            const userInfoDiv = document.getElementById('userInfo');
+
+            if (!userInfo || !userInfo.uniqueWording) {
+                messageDiv.textContent = 'Please login first!';
+                messageDiv.className = 'error';
+                setTimeout(() => window.location.href = '/', 2000);
+                return;
+            }
+
+            // Show user info and populate fields
+            userInfoDiv.style.display = 'block';
+
+            document.getElementById('username').textContent = userInfo.username || 'N/A';
+            document.getElementById('email').textContent = userInfo.email || 'N/A';
+            document.getElementById('userId').textContent = userInfo.id || 'N/A';
+            document.getElementById('uniqueWording').textContent = userInfo.uniqueWording || 'No UUID';
+
+            // Handle both account_type and accountType naming
+            const accountType = userInfo.account_type || userInfo.accountType || 'individual';
+            const typeDisplay = accountType === 'organisation' ? 'Organisation' : 'Individual';
+            document.getElementById('accountType').textContent = typeDisplay;
+
+            // Copy UUID to clipboard
+            document.getElementById('copyBtn').addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(userInfo.uniqueWording);
+                    const btn = document.getElementById('copyBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    btn.style.background = '#28a745';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '#667eea';
+                    }, 2000);
+                } catch (err) {
+                    messageDiv.textContent = 'Copy failed!';
+                    messageDiv.className = 'error';
+                }
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('userInfo');
+                messageDiv.textContent = 'Logged out successfully!';
+                messageDiv.className = 'success';
+                setTimeout(() => window.location.href = '/', 1500);
+            });
+        });
+    </script>
+</body>
+</html>

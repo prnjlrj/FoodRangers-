@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Hub - Donate/Receive</title>
+    <style>
+        /* Your existing styles + new food hub styles */
+        .tab-container { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; }
+        .tab-active { background: #667eea; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .order-form { background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
+        .order-list { max-height: 400px; overflow-y: auto; }
+        .order-card { background: white; padding: 20px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box" style="max-width: 600px;">
+            <h2>🍱 Food Hub</h2>
+            
+            <div class="user-info">
+                <strong>ID:</strong> <span id="uniqueId">-</span> | 
+                <strong>Type:</strong> <span id="accountType">-</span>
+            </div>
+
+            <!-- Profile Setup (first time only) -->
+            <div id="profileSetup" class="order-form" style="display: none;">
+                <h3>📍 Complete Profile</h3>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="text" id="address1" placeholder="Address 1">
+                <input type="text" id="address2" placeholder="Address 2 (optional)">
+                <button onclick="setupProfile()">Save Profile</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-container">
+                <button class="tab-btn tab-active" onclick="switchTab('donate')">Donate Food</button>
+                <button class="tab-btn" onclick="switchTab('receive')">Request Food</button>
+            </div>
+
+            <!-- Donate Tab -->
+            <div id="donate" class="tab-content active">
+                <div class="order-form">
+                    <h3>📦 Donate Food</h3>
+                    <select id="foodTypeDonate">
+                        <option>Rice (10kg)</option>
+                        <option>Wheat (10kg)</option>
+                        <option>Vegetables (mixed)</option>
+                        <option>Cooking Oil (5L)</option>
+                        <option>Other</option>
+                    </select>
+                    <input type="text" id="quantityDonate" placeholder="Quantity">
+                    <textarea id="descDonate" placeholder="Description / Expiry date"></textarea>
+                    <button onclick="createOrder('donate')">Post Donation</button>
+                </div>
+            </div>
+
+            <!-- Receive Tab -->
+            <div id="receive" class="tab-content">
+                <div class="order-form">
+                    <h3>📋 Request Food</h3>
+                    <select id="foodTypeReceive">
+                        <option>Rice</option>
+                        <option>Wheat</option>
+                        <option>Vegetables</option>
+                        <option>Dal/Pulses</option>
+                        <option>Other</option>
+                    </select>
+                    <input type="text" id="quantityReceive" placeholder="Quantity needed">
+                    <textarea id="descReceive" placeholder="Situation / Urgent needs"></textarea>
+                    <button onclick="createOrder('receive')">Request Food</button>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="order-list" id="ordersList">
+                <p>Loading your orders...</p>
+            </div>
+
+            <button class="logout-btn" onclick="logout()" style="margin-top: 20px;">🚪 Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('userInfo'));
+        if (!user) window.location.href = '/';
+
+        document.getElementById('uniqueId').textContent = user.uniqueWording?.slice(0,8) + '...';
+        document.getElementById('accountType').textContent = user.account_type === 'organisation' ? 'Organisation' : 'Individual';
+
+        // Show profile setup if not completed
+        if (!user.orderNo) {
+            document.getElementById('profileSetup').style.display = 'block';
+        }
+
+        async function setupProfile() {
+            const profileData = {
+                userId: user.id,
+                phone: document.getElementById('phone').value,
+                addresses: [
+                    document.getElementById('address1').value,
+                    document.getElementById('address2').value
+                ].filter(Boolean)
+            };
+
+            const res = await fetch('/api/profile/setup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(profileData)
+            });
+
+            if (res.ok) {
+                location.reload();
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('tab-active');
+            document.getElementById(tab).classList.add('active');
+        }
+
+        async function createOrder(type) {
+            const orderData = {
+                userId: user.id,
+                orderNo: user.orderNo,
+                type,
+                food_type: document.getElementById(`foodType${type.charAt(0).toUpperCase() + type.slice(1)}`).value,
+                quantity: document.getElementById(`quantity${type.charAt(0).toUpperCase() + type.slice(1)}`).value,
+                description: document.getElementById(`desc${type.charAt(0).toUpperCase() + type.slice(1)}`).value
+            };
+
+            // Add POST /api/orders endpoint to server.js
+            // Implementation similar to profile setup
+        }
+
+        function logout() {
+            localStorage.removeItem('userInfo');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
