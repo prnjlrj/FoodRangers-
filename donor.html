@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Section</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <div class="container mt-4">
+        <div class="card p-4 shadow-lg rounded donor-card">
+
+            <h2 class="fw-bold mb-4 text-center">Donor Details</h2>
+
+            <!-- FROM (DROPDOWN) -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">From</label>
+                <select class="form-select form-select-lg">
+                    <option value="">Select Location</option>
+                    <option>VIT University, Vellore, Tamil Nadu</option>
+                    <option>Kashipur, Uttarakhand</option>
+                    <option>Geeta Colony, Jamnapar, Delhi</option>
+                </select>
+            </div>
+
+            <!-- DESCRIBE FOOD ITEM + QUANTITY -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Describe food item</label>
+                <textarea class="form-control form-control-lg" rows="2" placeholder="Describe food item here"></textarea>
+            </div>
+
+            <div class="mb-3 d-flex align-items-center gap-3">
+                <label class="form-label fw-bold m-0">Quantity</label>
+
+                <div class="quantity-box d-flex align-items-center">
+                    <button class="btn btn-sm btn-dark px-3" id="minusBtn">−</button>
+                    <input type="text" id="quantityInput" class="form-control text-center mx-2" value="1" style="width: 70px;">
+                    <button class="btn btn-sm btn-dark px-3" id="plusBtn">+</button>
+                </div>
+            </div>
+
+            <!-- ADD MORE FOOD ITEMS -->
+            <div class="mb-3">
+                <a href="#" class="fw-bold text-decoration-none" style="color:#ff6a00;">
+                    <i class="fas fa-plus"></i> Add more food items
+                </a>
+            </div>
+
+            <!-- FOOD CONTAINERS (YES/NO) -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Do you have food containers with you?</label>
+                <div class="d-flex gap-4 mt-1">
+                    <div>
+                        <input type="radio" name="container" id="yes" class="form-check-input">
+                        <label for="yes" class="form-check-label">Yes</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="container" id="no" class="form-check-input">
+                        <label for="no" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOD TYPE -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Food Type</label>
+                <div class="d-flex gap-4 mt-1">
+                    <div>
+                        <input type="radio" name="foodType" id="veg" class="form-check-input">
+                        <label for="veg" class="form-check-label">Veg</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="foodType" id="nonveg" class="form-check-input">
+                        <label for="nonveg" class="form-check-label">Non-Veg</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="foodType" id="jain" class="form-check-input">
+                        <label for="jain" class="form-check-label">Jain</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEAL PREPARED TIME -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">When was this meal prepared? (in hours)</label>
+                <input type="range" min="0" max="7" class="form-range" id="prepTimeRange">
+                <div class="text-end fw-bold"><span id="prepHours">0</span> hrs ago</div>
+            </div>
+
+            <!-- DONATE BUTTON -->
+            <div class="text-center mt-4">
+                <button class="btn btn-lg donate-btn px-5">
+                    Donate
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+<!-- Quantity + Slider JS -->
+<script>
+    // Quantity buttons
+    let quantityInput = document.getElementById("quantityInput");
+    document.getElementById("minusBtn").onclick = () => {
+        let value = parseInt(quantityInput.value);
+        if (value > 1) quantityInput.value = value - 1;
+    };
+    document.getElementById("plusBtn").onclick = () => {
+        let value = parseInt(quantityInput.value);
+        quantityInput.value = value + 1;
+    };
+
+    // Slider for meal prepared time
+    let range = document.getElementById("prepTimeRange");
+    let hoursLabel = document.getElementById("prepHours");
+    range.oninput = function () {
+        hoursLabel.textContent = this.value;
+    };
+</script>
+
+</body>
+</html>

@@ -10,15 +10,102 @@
     margin-left: 1460px;
 }
 
-/* .profile
-{
-    width: 100%;
-    height: 50px;
-    background-color: black;
-} */
-
 .profile-bar a
 {
     text-decoration: none;
 }
 
+.donor
+{
+    margin-top: 100px;
+}
+
+.donor a
+{
+    text-decoration: none;
+}
+
+.receiver a
+{
+    text-decoration: none;
+}
+
+/* Header Color */
+.custom-header {
+    background: #ff6a00;
+}
+
+/* Body background (60% transparent #ff6a00) */
+body {
+    background: rgba(255, 106, 0, 0.6);
+}
+
+/* Card styling */
+.card {
+    background: #ffffff;
+    border: none;
+}
+
+/* Input focus styling */
+.form-control:focus {
+    border-color: #ff6a00 !important;
+    box-shadow: 0 0 10px rgba(255, 106, 0, 0.5) !important;
+}
+
+/* Labels */
+.form-label {
+    font-size: 16px;
+}
+
+/* Improve spacing */
+.container {
+    max-width: 600px;
+}
+
+
+/*DONOR SECTION*/
+
+
+body 
+{
+    background: rgba(255, 106, 0, 0.15);
+    font-family: 'Inter', sans-serif;
+}
+
+.donor-card {
+    background: #ffffff;
+    border-left: 6px solid #ff6a00;
+}
+
+/* Donate button */
+.donate-btn {
+    background: #ff6a00;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donate-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 12px rgba(255, 106, 0, 0.6);
+}
+
+/* Quantity input style */
+.quantity-box input {
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Focus glow for all inputs */
+.form-control:focus, .form-select:focus, textarea:focus {
+    border-color: #ff6a00 !important;
+    box-shadow: 0px 0px 8px rgba(255, 106, 0, 0.4) !important;
+}
+
+/* Card spacing */
+.container {
+    max-width: 650px;
+}
